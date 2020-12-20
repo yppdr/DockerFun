@@ -1,0 +1,48 @@
+version: '2'
+services:
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - database
+
+
+  web:
+    image: kiwiphp:1.1
+    container_name: web_apache
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - web_data:/var/www
+    networks:
+      - web
+      - database        
+
+
+
+networks:
+
+  web:
+    external:
+      name: web
+  database:
+    external:
+      name: database
+
+volumes:
+
+  mysql_data:
+    external: true
+  web_data:
+    external: true
